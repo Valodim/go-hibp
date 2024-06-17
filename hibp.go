@@ -25,7 +25,7 @@ const PasswdBaseURL = "https://api.pwnedpasswords.com"
 // DefaultUserAgent defines the default UA string for the HTTP client
 // Currently the URL in the UA string is comment out, as there is a bug in the HIBP API
 // not allowing multiple slashes
-const DefaultUserAgent = `go-hibp/` + Version + ` (+https://github.com/wneessen/go-hibp)`
+const DefaultUserAgent = `go-hibp/` + Version + ` (+https://github.com/Valodim/go-hibp)`
 
 // DefaultTimeout is the default timeout value for the HTTP client
 const DefaultTimeout = time.Second * 5

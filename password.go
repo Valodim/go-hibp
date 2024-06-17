@@ -10,7 +10,7 @@ import (
 	"strings"
 	"unicode/utf16"
 
-	"github.com/wneessen/go-hibp/md4"
+	"github.com/Valodim/go-hibp/md4"
 )
 
 // PwnedPassAPI is a HIBP Pwned Passwords API client
