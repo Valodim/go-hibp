@@ -104,8 +104,14 @@ func New(options ...Option) Client {
 		opt(&c)
 	}
 
-	// Add a http client to the Client object
-	c.hc = httpClient(c.to)
+	if c.hc == nil {
+		// Add a http client to the Client object, if not already set via options
+		c.hc = httpClient()
+	}
+
+	if c.to > 0 {
+		c.hc.Timeout = c.to
+	}
 
 	// Associate the different HIBP service APIs with the Client
 	c.PwnedPassAPI = &PwnedPassAPI{
@@ -153,6 +159,13 @@ func WithUserAgent(a string) Option {
 func WithRateLimitSleep() Option {
 	return func(c *Client) {
 		c.rlSleep = true
+	}
+}
+
+// Set a custom http client to use. It is recommended to set up this client with the upstream TLS config.
+func WithHttpClient(hc *http.Client) Option {
+	return func(c *Client) {
+		c.hc = hc
 	}
 }
 
@@ -248,7 +261,7 @@ func (c *Client) HTTPResBody(m string, p string, q map[string]string) ([]byte, *
 }
 
 // httpClient returns a custom http client for the HIBP Client object
-func httpClient(to time.Duration) *http.Client {
+func httpClient() *http.Client {
 	tc := &tls.Config{
 		MaxVersion: tls.VersionTLS13,
 		MinVersion: tls.VersionTLS12,
@@ -257,9 +270,6 @@ func httpClient(to time.Duration) *http.Client {
 	hc := &http.Client{
 		Transport: ht,
 		Timeout:   DefaultTimeout,
-	}
-	if to.Nanoseconds() > 0 {
-		hc.Timeout = to
 	}
 
 	return hc
